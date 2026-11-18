@@ -64,7 +64,7 @@ function ejercicioI() {
             "J. Sustituir una nota por otra \n" +
             "K. Añadir una nota en una posición determinada \n" +
             "L. Contar el número de suspensos \n" +
-            "M. Salir \n")?.toUpperCase() ?? "";
+            "M. Salir \n")?.toUpperCase() ?? ""; // Esto se hace para que no devuelva un null al cancelar y de error con el toUpperCase
 
         // El programa deberá implementar las siguientes funcionalidades:
         switch (respuesta) {
@@ -77,14 +77,14 @@ function ejercicioI() {
                 break;
 
 
-                // B. Introducir una nota al final
+            // B. Introducir una nota al final
             case "B":
                 // a. Solicitar una nota al usuario.
                 // b. Añadirla al final de la lista.
                 arrayNotas.push(introducirNota());
                 break;
 
-                // C. Subir todas las notas X puntos
+            // C. Subir todas las notas X puntos
             case "C":
                 let suma = 0;
                 do {
@@ -102,7 +102,7 @@ function ejercicioI() {
                 }
                 break;
 
-                // D. Calcular estadísticas actuales
+            // D. Calcular estadísticas actuales
             case "D":
                 let moda = 0;
                 let maximo = -Infinity;
@@ -136,7 +136,7 @@ function ejercicioI() {
                 }
                 break;
 
-                // E. Vaciar notas
+            // E. Vaciar notas
             case "E":
                 // a. Eliminar todos los elementos de la lista.
                 arrayNotas = [];
@@ -144,7 +144,7 @@ function ejercicioI() {
                 window.alert("La lista está vacía");
                 break;
 
-                // F. Inicializar N notas a valor X
+            // F. Inicializar N notas a valor X
             case "F":
                 let numNotas = 0;
                 let notas = 0;
@@ -163,7 +163,7 @@ function ejercicioI() {
 
                 break;
 
-                // G. Eliminar la primera nota
+            // G. Eliminar la primera nota
             case "G":
                 if (arrayNotas.length == 0) {
                     // b. Informar si la lista estaba vacía.
@@ -179,7 +179,7 @@ function ejercicioI() {
                 }
                 break;
 
-                // H. Eliminar la segunda nota
+            // H. Eliminar la segunda nota
             case "H":
                 // b. Comprobar que existe una segunda nota antes de eliminarla.
                 if (arrayNotas.length >= 2) {
@@ -191,7 +191,7 @@ function ejercicioI() {
                 }
                 break;
 
-                // I. Establecer a 0 todos los suspensos
+            // I. Establecer a 0 todos los suspensos
             case "I":
                 // a. Recorrer la lista.
                 for (i = 0; i < arrayNotas.length; i++) {
@@ -203,7 +203,7 @@ function ejercicioI() {
                 }
                 break;
 
-                // J. Sustituir una nota por otra
+            // J. Sustituir una nota por otra
             case "J":
                 let origen = 0;
                 let destino = 0;
@@ -225,7 +225,7 @@ function ejercicioI() {
                 }
                 break;
 
-                // K. Añadir una nota en una posición determinada
+            // K. Añadir una nota en una posición determinada
             case "K":
                 let pos = 0;
                 // a. Solicitar una nota.
@@ -239,7 +239,7 @@ function ejercicioI() {
                 arrayNotas.splice(pos, 0, nota);
                 break;
 
-                // L. Contar el número de suspensos
+            // L. Contar el número de suspensos
             case "L":
                 let cont = 0;
                 // a. Recorrer la lista.
@@ -253,7 +253,7 @@ function ejercicioI() {
                 window.alert("El número de suspensos es: " + cont);
                 break;
 
-                // El caso M para salir
+            // El caso M para salir
             case "M":
                 salida = true;
                 break;
@@ -286,7 +286,10 @@ let setParticipantes = new Set();
 
 // Función para pedir el nombre
 function solicitarNombre() {
-    nombre = window.prompt("Introduce el nombre del participante:");
+    do {
+        nombre = window.prompt("Introduce el nombre del participante:");
+    } while (nombre == null || nombre.trim() == "");
+    return nombre.trim();
 }
 
 function ejercicioII() {
@@ -298,55 +301,89 @@ function ejercicioII() {
             "C. Comprobar inscripción \n" +
             "D. Mostrar participantes \n" +
             "E. Vaciar inscripciones: Eliminar todos los participantes del conjunto. \n" +
-            "F. Salir")?.toUpperCase() ?? "";
+            "F. Salir")?.toUpperCase() ?? ""; // Esto se hace para que no devuelva un null al cancelar y de error con el toUpperCase
 
         switch (respuesta) {
             // A. Inscribir un participante
             case "A":
                 // a. Solicitar el nombre de un participante.
-                // b. Añadirlo al conjunto.
-                setParticipantes.add(solicitarNombre());
+                nombre = solicitarNombre();
+
+                // c. No permitir nombres duplicados. --> Los conjuntos de por sí no pueden tener duplicados
+                if (setParticipantes.has(nombre)) {
+                    window.alert("El participante ya estaba incluido anteriormente");
+                } else {
+                    // b. Añadirlo al conjunto.
+                    setParticipantes.add(nombre);
+                }
+
+
 
                 break;
 
+            // B. Dar de baja un participante
             case "B":
+                // a. Solicitar un nombre.
+                nombre = solicitarNombre();
+
+                // b. Eliminarlo del conjunto si existe.
+                if (setParticipantes.has(nombre)) {
+                    setParticipantes.delete(nombre);
+                } else {
+                    // c. Informar si no se encuentra.
+                    window.alert("No se ha encontrado ese nombre en el conjunto");
+                }
 
                 break;
 
+            // C. Comprobar inscripción
             case "C":
+                // a. Solicitar un nombre.
+                nombre = solicitarNombre();
+
+                // b. Indicar si está inscrito en la actividad.
+                if (setParticipantes.has(nombre)) {
+                    window.alert("Está suscrito");
+                } else {
+                    window.alert("No está suscrito");
+                }
 
                 break;
 
+            // D. Mostrar participantes
             case "D":
+                let mensaje = "";
+
+                // a. Recorrer el conjunto
+                for (const valor of setParticipantes) {
+                    mensaje += "Participante: " + valor + "\n";
+                }
+
+                // b. Mostrar todos los participantes inscritos y mostrar el número total de participantes.
+                window.alert(mensaje + "En total hay: " + setParticipantes.size);
 
                 break;
 
+            // E. Vaciar inscripciones: Eliminar todos los participantes del conjunto.
             case "E":
+                setParticipantes.clear();
 
                 break;
 
+            // F. Salir
             case "F":
                 salida = true;
                 break;
+
+            default:
+                // En el caso de que no entre en ninguna opción.
+                window.alert("Introduce una opción válida.");
+                break;
         }
     } while (!salida);
-
-
+    salida = false;
+    console.table(setParticipantes);
 
 }
 
-// A. Inscribir un participante
-// a. Solicitar el nombre de un participante.
-// b. Añadirlo al conjunto.
-// c. No permitir nombres duplicados.
-// B. Dar de baja un participante
-// a. Solicitar un nombre.
-// b. Eliminarlo del conjunto si existe.
-// c. Informar si no se encuentra.
-// C. Comprobar inscripción
-// a. Solicitar un nombre.
-// b. Indicar si está inscrito en la actividad.
-// D. Mostrar participantes
-// a. Recorrer el conjunto y mostrar todos los participantes inscritos.
-// b. Mostrar el número total de participantes.
-// E. Vaciar inscripciones: Eliminar todos los participantes del conjunto.
+ejercicioII();
