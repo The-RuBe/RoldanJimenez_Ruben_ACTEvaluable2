@@ -4,24 +4,19 @@
 
 // El programa comenzará con una lista de notas vacía y mostrará un menú
 // interactivo que permita al usuario realizar diferentes operaciones sobre ella
-let arrayNotas = [];
-let nota = 0;
-let salida = false;
-let nombre = "";
-let isbn = 0;
 
 // Función para introducir notas y validarlas
 function introducirNota() {
+    let nota = 0;
     do {
         nota = parseFloat(window.prompt("Introduce una nota válida:"));
-    } while (nota < 0 || nota > 10);
+    } while (isNaN(nota) || nota < 0 || nota > 10);
     return nota;
 }
 
 // Función para calcular la moda
 function calcularModa(arrayNotas) {
-
-    let mapa = new Map();
+    const mapa = new Map();
     let cont = 0;
     let moda = 0;
 
@@ -39,11 +34,13 @@ function calcularModa(arrayNotas) {
             moda = nota;
         }
     }
-
     return moda;
 }
 
 function ejercicioI() {
+    let arrayNotas = [];
+    let nota = 0;
+    let salida = false;
 
     do {
         // Opciones del menú
@@ -72,48 +69,52 @@ function ejercicioI() {
                 arrayNotas.unshift(introducirNota());
                 break;
 
-
-                // B. Introducir una nota al final
+            // B. Introducir una nota al final
             case "B":
                 // a. Solicitar una nota al usuario.
                 // b. Añadirla al final de la lista.
                 arrayNotas.push(introducirNota());
                 break;
 
-                // C. Subir todas las notas X puntos
+            // C. Subir todas las notas X puntos
             case "C":
                 let suma = 0;
-                do {
-                    // a. Solicitar cuántos puntos se quieren sumar.
-                    suma = parseFloat(window.prompt("Introduce un número válido:"));
-                } while (isNaN(suma) || suma < 0 || suma > 10);
 
-                // b. Incrementar todas las notas de la lista en esa cantidad.
-                for (i = 0; i < arrayNotas.length; i++) {
-                    if (arrayNotas[i] + suma > 10) {
-                        arrayNotas[i] = 10;
-                    } else {
-                        arrayNotas[i] += suma;
+                if (arrayNotas.length == 0) {
+                    window.alert("La lista está vacía");
+                } else {
+                    do {
+                        // a. Solicitar cuántos puntos se quieren sumar.
+                        suma = parseFloat(window.prompt("Introduce un número válido:"));
+                    } while (isNaN(suma) || suma < 0 || suma > 10);
+
+                    // b. Incrementar todas las notas de la lista en esa cantidad.
+                    for (let i = 0; i < arrayNotas.length; i++) {
+                        if (arrayNotas[i] + suma > 10) {
+                            arrayNotas[i] = 10;
+                        } else {
+                            arrayNotas[i] += suma;
+                        }
                     }
                 }
                 break;
 
-                // D. Calcular estadísticas actuales
+            // D. Calcular estadísticas actuales
             case "D":
                 let media = 0;
                 let arraySort = [...arrayNotas];
-                arraySort.sort();
 
                 if (arrayNotas.length == 0) {
                     // f. En caso de que la lista esté vacía, se deberá informar al
                     // usuario de que no es posible calcular las estadísticas.
                     window.alert("La lista de notas está vacía, no es posible calcular las estadísticas.");
                 } else {
-                    for (i = 0; i < arrayNotas.length; i++) {
+                    for (let i = 0; i < arrayNotas.length; i++) {
                         // e. Media: promedio de todas las notas.
                         media += arrayNotas[i];
                     }
 
+                    arraySort.sort((a, b) => a - b);
                     // a. Mostrar las siguientes estadísticas:
                     // b. Moda: nota que más veces aparece en la lista.
                     window.alert("La moda es: " + calcularModa(arrayNotas) + "\n" +
@@ -125,7 +126,7 @@ function ejercicioI() {
                 }
                 break;
 
-                // E. Vaciar notas
+            // E. Vaciar notas
             case "E":
                 // a. Eliminar todos los elementos de la lista.
                 arrayNotas = [];
@@ -133,7 +134,7 @@ function ejercicioI() {
                 window.alert("La lista está vacía");
                 break;
 
-                // F. Inicializar N notas a valor X
+            // F. Inicializar N notas a valor X
             case "F":
                 let numNotas = 0;
                 let notas = 0;
@@ -141,7 +142,7 @@ function ejercicioI() {
                 do {
                     // a. Solicitar al usuario el número de notas que desea generar.
                     numNotas = parseInt(window.prompt("Introduce un número de notas válido: "));
-                } while (numNotas <= 0);
+                } while (isNaN(numNotas) || numNotas <= 0);
 
                 // b. Solicitar el valor que tendrán todas esas notas.
                 notas = introducirNota();
@@ -149,10 +150,9 @@ function ejercicioI() {
                 // c. Sustituir el contenido actual de la lista por las nuevas notas.
                 arrayNotas = new Array(numNotas);
                 arrayNotas.fill(notas);
-
                 break;
 
-                // G. Eliminar la primera nota
+            // G. Eliminar la primera nota
             case "G":
                 if (arrayNotas.length == 0) {
                     // b. Informar si la lista estaba vacía.
@@ -162,13 +162,12 @@ function ejercicioI() {
                     arrayNotas.shift();
                     window.alert("Eliminado el primer elemento");
                     if (arrayNotas.length == 0) {
-                        console.alert("La lista ha quedado vacía");
+                        window.alert("La lista ha quedado vacía");
                     }
-
                 }
                 break;
 
-                // H. Eliminar la segunda nota
+            // H. Eliminar la segunda nota
             case "H":
                 // b. Comprobar que existe una segunda nota antes de eliminarla.
                 if (arrayNotas.length >= 2) {
@@ -180,19 +179,23 @@ function ejercicioI() {
                 }
                 break;
 
-                // I. Establecer a 0 todos los suspensos
+            // I. Establecer a 0 todos los suspensos
             case "I":
-                // a. Recorrer la lista.
-                for (i = 0; i < arrayNotas.length; i++) {
-                    if (arrayNotas[i] < 5) {
-                        // b. Sustituir por 0 todas las notas inferiores a 5.
-                        arrayNotas[i] = 0;
-                        window.alert("Todos los suspensos han cambiado a 0");
+                if (arrayNotas.length == 0) {
+                    window.alert("La lista está vacía");
+                } else {
+                    // a. Recorrer la lista.
+                    for (let i = 0; i < arrayNotas.length; i++) {
+                        if (arrayNotas[i] < 5) {
+                            // b. Sustituir por 0 todas las notas inferiores a 5.
+                            arrayNotas[i] = 0;
+                        }
                     }
+                    window.alert("Todos los suspensos han cambiado a 0");
                 }
                 break;
 
-                // J. Sustituir una nota por otra
+            // J. Sustituir una nota por otra
             case "J":
                 let origen = 0;
                 let destino = 0;
@@ -200,21 +203,21 @@ function ejercicioI() {
                 // a. Solicitar una nota de origen y otra de destino.
                 do {
                     origen = parseFloat(window.prompt("Introduce un número de origen válido: "));
-                } while (origen < 0 || origen > 10);
+                } while (isNaN(origen) || origen < 0 || origen > 10);
                 do {
                     destino = parseFloat(window.prompt("Introduce un número de destino válido: "));
-                } while (destino < 0 || destino > 10);
+                } while (isNaN(destino) || destino < 0 || destino > 10);
 
-                for (i = 0; i < arrayNotas.length; i++) {
-                    // b. Sustituir todas las apariciones de la nota de origen por la nota
-                    // de destino.
+                for (let i = 0; i < arrayNotas.length; i++) {
+                    // b. Sustituir todas las apariciones de la nota de origen por la nota de destino.
                     if (arrayNotas[i] == origen) {
                         arrayNotas[i] = destino;
                     }
                 }
+                window.alert("Notas sustituidas correctamente");
                 break;
 
-                // K. Añadir una nota en una posición determinada
+            // K. Añadir una nota en una posición determinada
             case "K":
                 let pos = 0;
                 // a. Solicitar una nota.
@@ -222,27 +225,27 @@ function ejercicioI() {
                 // b. Solicitar la posición en la que se desea insertar.
                 do {
                     pos = parseInt(window.prompt("Introduce la posición: "));
-                } while (pos < arrayNotas.length - 1 || pos < 0);
+                } while (isNaN(pos) || pos < 0 || pos > arrayNotas.length);
                 // c. Insertar la nota en esa posición, desplazando los elementos posteriores.
-                window.alert(`Añadida la nota ${nota} en la posición ${pos}`);
                 arrayNotas.splice(pos, 0, nota);
+                window.alert(`Añadida la nota ${nota} en la posición ${pos}`);
                 break;
 
-                // L. Contar el número de suspensos
+            // L. Contar el número de suspensos
             case "L":
-                let cont = 0;
+                let suspensos = 0;
                 // a. Recorrer la lista.
-                for (i = 0; i < arrayNotas.length; i++) {
+                for (let i = 0; i < arrayNotas.length; i++) {
                     // b. Contar cuántas notas son inferiores a 5.
                     if (arrayNotas[i] < 5) {
-                        cont++;
+                        suspensos++;
                     }
                 }
                 // c. Mostrar el número total de suspensos.
-                window.alert("El número de suspensos es: " + cont);
+                window.alert("El número de suspensos es: " + suspensos);
                 break;
 
-                // El caso M para salir
+            // El caso M para salir
             case "M":
                 salida = true;
                 break;
@@ -257,11 +260,10 @@ function ejercicioI() {
         // El menú deberá repetirse continuamente hasta que el usuario seleccione la
         // opción de salir.
     } while (!salida);
-    salida = false;
     console.table(arrayNotas);
 }
 
-// ejercicioI();
+ejercicioI();
 
 
 // Ejercicio II (Conjuntos) : Gestión de participantes en actividades extraescolares
@@ -271,11 +273,9 @@ function ejercicioI() {
 // El programa comenzará con un conjunto vacío y mostrará un menú
 // interactivo que se repetirá hasta que el usuario decida salir.
 
-// Conjunto vacío
-let setParticipantes = new Set();
-
 // Función para pedir el nombre
 function solicitarNombre() {
+    let nombre = "";
     do {
         nombre = window.prompt("Introduce el nombre del participante:");
     } while (nombre == null || nombre.trim() == "");
@@ -283,6 +283,11 @@ function solicitarNombre() {
 }
 
 function ejercicioII() {
+    // Conjunto vacío
+    const setParticipantes = new Set();
+    let salida = false;
+    let nombre = "";
+
     do {
         // Menú interactivo repetitivo hasta salir
         const respuesta = window.prompt("Introduce tu opción: \n" +
@@ -304,12 +309,12 @@ function ejercicioII() {
                     window.alert("El participante ya estaba incluido anteriormente");
                 } else {
                     // b. Añadirlo al conjunto.
+                    window.alert("Participante añadido correctamente");
                     setParticipantes.add(nombre);
                 }
-
                 break;
 
-                // B. Dar de baja un participante
+            // B. Dar de baja un participante
             case "B":
                 // a. Solicitar un nombre.
                 nombre = solicitarNombre();
@@ -317,14 +322,14 @@ function ejercicioII() {
                 // b. Eliminarlo del conjunto si existe.
                 if (setParticipantes.has(nombre)) {
                     setParticipantes.delete(nombre);
+                    window.alert("Participante dado de baja correctamente");
                 } else {
                     // c. Informar si no se encuentra.
                     window.alert("No se ha encontrado ese nombre en el conjunto");
                 }
-
                 break;
 
-                // C. Comprobar inscripción
+            // C. Comprobar inscripción
             case "C":
                 // a. Solicitar un nombre.
                 nombre = solicitarNombre();
@@ -335,33 +340,35 @@ function ejercicioII() {
                 } else {
                     window.alert("No está suscrito");
                 }
-
                 break;
 
-                // D. Mostrar participantes
+            // D. Mostrar participantes
             case "D":
                 let mensaje = "";
 
-                // a. Recorrer el conjunto
-                for (const valor of setParticipantes) {
-                    mensaje += "Participante: " + valor + "\n";
+                if (setParticipantes.size == 0) {
+                    window.alert("No hay participantes inscritos");
+                    break;
+                } else {
+                    // a. Recorrer el conjunto
+                    for (const valor of setParticipantes) {
+                        mensaje += "Participante: " + valor + "\n";
+                    }
+
+                    // b. Mostrar todos los participantes inscritos y mostrar el número total de participantes.
+                    window.alert(mensaje + "En total hay: " + setParticipantes.size);
                 }
-
-                // b. Mostrar todos los participantes inscritos y mostrar el número total de participantes.
-                window.alert(mensaje + "En total hay: " + setParticipantes.size);
-
                 break;
 
-                // E. Vaciar inscripciones: Eliminar todos los participantes del conjunto.
+            // E. Vaciar inscripciones: Eliminar todos los participantes del conjunto.
             case "E":
+                window.alert("Se han eliminado todos los participantes");
                 setParticipantes.clear();
-
                 break;
 
-                // F. Salir
+            // F. Salir
             case "F":
                 salida = true;
-
                 break;
 
             default:
@@ -372,12 +379,11 @@ function ejercicioII() {
         console.table(setParticipantes);
 
     } while (!salida);
-    salida = false;
     console.table(setParticipantes);
 
 }
 
-// ejercicioII();
+ejercicioII();
 
 
 // Ejercicio III (Mapas): Gestión de una biblioteca
@@ -389,18 +395,26 @@ function ejercicioII() {
 // El programa comenzará con un mapa vacío y mostrará un menú interactivo
 // que se repetirá hasta que el usuario decida salir.
 
-function solicitarISBN() {
-    let isbn = "";
+function solicitarTexto(mensaje) {
+    let texto = "";
     do {
-        isbn = window.prompt("Introduce el ISBN del libro:");
-    } while (!isbn);
+        texto = window.prompt(mensaje);
+    } while (texto === null || texto.trim() === "");
+    return texto.trim();
+}
 
-    return isbn;
+function solicitarCantidad(mensaje) {
+    let cantidad = 0;
+    do {
+        cantidad = parseInt(window.prompt(mensaje));
+    } while (isNaN(cantidad) || cantidad < 0);
+    return cantidad;
 }
 
 function ejercicioIII() {
-
-    let mapaLibros = new Map();
+    let isbn = "";
+    const mapaLibros = new Map();
+    let salida = false;
 
     class Libro {
         constructor(titulo, autor, cantidad) {
@@ -457,27 +471,27 @@ function ejercicioIII() {
 
             // A. Añadir un libro
             case "A":
-                // a. Solicitar ISBN, título, autor y número de ejemplares.
-                isbn = solicitarISBN();
-                const titulo = window.prompt("Introduce el título del libro:");
-                const autor = window.prompt("Introduce el autor del libro:");
-                const cantidad = parseInt(window.prompt("Introduce el número de ejemplares disponibles:"));
-
+                // a. Solicitar ISBN.
+                isbn = solicitarTexto("Introduce el ISBN del libro para añadirlo:");
                 // c. Comprobar que el ISBN no exista previamente.
                 if (mapaLibros.has(isbn)) {
                     window.alert("El libro con ese ISBN ya existe.");
                 } else {
+                    // a. Solicitar título, autor y número de ejemplares
+                    const titulo = solicitarTexto("Introduce el título del libro:");
+                    const autor = solicitarTexto("Introduce el autor del libro:");
+                    const cantidad = solicitarCantidad("Introduce el número de ejemplares disponibles:");
                     // b. Añadir el libro al mapa.
                     const libro = new Libro(titulo, autor, cantidad);
                     mapaLibros.set(isbn, libro);
+                    window.alert("Libro añadido correctamente.");
                 }
-
                 break;
 
-                // B. Eliminar un libro
+            // B. Eliminar un libro
             case "B":
                 // a. Solicitar un ISBN.
-                isbn = solicitarISBN();
+                isbn = solicitarTexto("Introduce el ISBN del libro:");
                 if (mapaLibros.has(isbn)) {
                     // b. Eliminar el libro si existe.
                     mapaLibros.delete(isbn);
@@ -486,61 +500,148 @@ function ejercicioIII() {
                     // c. Informar si no se encuentra.
                     window.alert("No se encontró un libro con ese ISBN.");
                 }
+                break;
 
-                case "C":
-                    // a. Solicitar un ISBN.
-                    isbn = solicitarISBN();
+            // C. Consultar un libro
+            case "C":
+                // a. Solicitar un ISBN.
+                isbn = solicitarTexto("Introduce el ISBN del libro a consultar:");
+                if (mapaLibros.has(isbn)) {
+                    // b. Mostrar toda la información del libro.
+                    window.alert("\n Libro con isbn " + isbn + " --> Información del libro: " + mapaLibros.get(isbn).toString());
+                } else {
+                    // c. Informar si no existe.
+                    window.alert("No se encontró un libro con ese ISBN.");
+                }
+                break;
 
-                    if (mapaLibros.has(isbn)) {
-                        // b. Mostrar toda la información del libro.
-                        window.alert("\n Libro con isbn " + isbn + " --> Información del libro: " + mapaLibros.get(isbn).toString());
-                    } else {
-                        // c. Informar si no existe.
-                        window.alert("No se encontró un libro con ese ISBN.");
-                    }
-
-                    break;
-
-                    // D.Mostrar catálogo
-                case "D":
-                    let cont = 0;
+            // D.Mostrar catálogo
+            case "D":
+                if (mapaLibros.size == 0) {
+                    window.alert("El catálogo está vacío.");
+                } else {
                     window.alert("Mira la consola para ver los libros!");
                     // a.Recorrer el mapa y mostrar todos los libros con sus datos.
                     for (let isbn of mapaLibros.keys()) {
                         console.log("\n Libro con isbn " + isbn + " --> Información del libro: " + mapaLibros.get(isbn).toString());
-                        cont++;
                     }
-
                     // b.Mostrar el número total de libros registrados.
-                    window.alert("El número total de libros registrados es: " + cont);
-                    break;
+                    window.alert("El número total de libros registrados es: " + mapaLibros.size);
+                }
 
-                case "E":
-                    // a. Solicitar un ISBN.
-                    isbn = solicitarISBN();
+                break;
 
-                    // b. Solicitar una cantidad.
-                    if (mapaLibros.has(isbn)) {
-                        cantidad = parseInt(window.prompt("Introduce la cantidad de ejemplares a modificar:"));
+            case "E":
+                // a. Solicitar un ISBN.
+                isbn = solicitarTexto("Introduce el ISBN del libro:");
+                // b. Solicitar una cantidad.
+                if (mapaLibros.has(isbn)) {
+                    const cantidadLibros = solicitarCantidad("Introduce la nueva cantidad de ejemplares:");
+                    // c. Actualizar el número de ejemplares disponibles.
+                    mapaLibros.get(isbn).setCantidad(cantidadLibros);
+                    window.alert("Ejemplares actualizados correctamente.");
+                } else {
+                    window.alert("No se encontró un libro con ese ISBN.");
+                }
+                break;
 
-                        // c. Actualizar el número de ejemplares disponibles.
-                        mapaLibros.get(isbn).setCantidad(cantidad);
+            // F. Buscar libros de un autor
+            case "F":
+                // a. Solicitar el nombre de un autor.
+                const autorBuscado = solicitarTexto("Introduce el nombre del autor:");
+                let encontrado = false;
+
+                // b. Mostrar todos los libros escritos por ese autor.
+                for (let isbn of mapaLibros.keys()) {
+                    if (mapaLibros.get(isbn).getAutor() == autorBuscado) {
+                        console.log("\n Libro con isbn " + isbn + " --> Información del libro: " + mapaLibros.get(isbn).toString());
+                        encontrado = true;
+                    }
+                }
+                if (encontrado) {
+                    window.alert("Búsqueda completada. Mira la consola para ver los resultados.");
+                } else {
+                    window.alert("No se encontraron libros de ese autor.");
+                }
+                break;
+
+            // G. Prestar un libro
+            case "G":
+                // a. Solicitar el ISBN.
+                isbn = solicitarTexto("Introduce el ISBN del libro a prestar:");
+
+                // b. Si existen ejemplares disponibles, restar uno.
+                if (mapaLibros.has(isbn) && mapaLibros.get(isbn).getCantidad() > 0) {
+                    mapaLibros.get(isbn).setCantidad(mapaLibros.get(isbn).getCantidad() - 1);
+                    window.alert("Préstamo exitoso");
+                } else {
+                    // c. Si no quedan ejemplares, mostrar un mensaje indicándolo.
+                    window.alert("No quedan ejemplares disponibles del libro con ISBN " + isbn);
+                }
+                break;
+
+            // H. Devolver un libro
+            case "H":
+                // a. Solicitar el ISBN.
+                isbn = solicitarTexto("Introduce el ISBN del libro a devolver:");
+
+                // b. Incrementar en uno el número de ejemplares disponibles.
+                if (mapaLibros.has(isbn)) {
+                    mapaLibros.get(isbn).setCantidad(mapaLibros.get(isbn).getCantidad() + 1);
+                    window.alert("Libro devuelto");
+                } else {
+                    window.alert("No se encontró el libro con isbn " + isbn);
+                }
+                break;
+
+            // I. Mostrar estadísticas
+            case "I":
+                if (mapaLibros.size === 0) {
+                    window.alert("El catálogo está vacío, no es posible calcular las estadísticas.");
+                } else {
+                    let cantidadTotal = 0;
+                    let maxEjemplares = -Infinity;
+                    let libroConMasEjemplares = null;
+
+                    for (let isbn of mapaLibros.keys()) {
+                        // b. Calcular el total de ejemplares disponibles.
+                        cantidadTotal += mapaLibros.get(isbn).getCantidad();
+                        if (mapaLibros.get(isbn).getCantidad() > maxEjemplares) {
+                            // c. Mostrar el libro con más ejemplares disponibles.
+                            maxEjemplares = mapaLibros.get(isbn).getCantidad();
+                            libroConMasEjemplares = mapaLibros.get(isbn);
+                        }
                     }
 
-                    // K. Salir: Finalizar el programa.
-                    case "K":
-                        salida = true;
-                        break;
+                    window.alert(
+                        // a. Mostrar el número total de libros registrados.
+                        "Total de libros registrados: " + mapaLibros.size + "\n" +
+                        "Total de ejemplares disponibles: " + cantidadTotal + "\n" +
+                        "Libro con más ejemplares:" + libroConMasEjemplares.toString());
+                }
+                break;
 
-                    default:
-                        // En el caso de que no entre en ninguna opción.
-                        window.alert("Introduce una opción válida.");
-                        break;
+            // J. Vaciar catálogo: Eliminar todos los libros del mapa.
+            case "J":
+                mapaLibros.clear();
+                window.alert("El catálogo ha sido vaciado.");
+                break;
+
+            // K. Salir: Finalizar el programa.
+            case "K":
+                salida = true;
+                break;
+
+            default:
+                // En el caso de que no entre en ninguna opción.
+                window.alert("Introduce una opción válida.");
+                break;
         }
         console.table(mapaLibros);
 
     } while (!salida);
-    salida = false;
     console.table(mapaLibros);
 
 }
+
+ejercicioIII();
